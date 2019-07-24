@@ -17,7 +17,15 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "ngx-responsive-image": [
+        "dist/ngx-responsive-image"
+      ],
+      "ngx-responsive-image/*": [
+        "dist/ngx-responsive-image/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
