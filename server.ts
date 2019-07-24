@@ -1,25 +1,8 @@
-/**
- * *** NOTE ON IMPORTING FROM ANGULAR AND NGUNIVERSAL IN THIS FILE ***
- *
- * If your application uses third-party dependencies, you'll need to
- * either use Webpack or the Angular CLI's `bundleDependencies` feature
- * in order to adequately package them for use on the server without a
- * node_modules directory.
- *
- * However, due to the nature of the CLI's `bundleDependencies`, importing
- * Angular in this file will create a different instance of Angular than
- * the version in the compiled application code. This leads to unavoidable
- * conflicts. Therefore, please do not explicitly import from @angular or
- * @nguniversal in this file. You can export any needed resources
- * from your application's main.server.ts file, as seen below with the
- * import for `ngExpressEngine`.
- */
-
-import 'zone.js/dist/zone-node';
-
 import * as express from 'express';
-import {join} from 'path';
-
+import * as fs from 'fs';
+import * as path from 'path';
+import { join } from 'path';
+import 'zone.js/dist/zone-node';
 // Express server
 const app = express();
 
@@ -27,25 +10,79 @@ const PORT = process.env.PORT || 4000;
 const DIST_FOLDER = join(process.cwd(), 'dist/browser');
 
 // * NOTE :: leave this as require() since this file is built Dynamically from webpack
-const {AppServerModuleNgFactory, LAZY_MODULE_MAP, ngExpressEngine, provideModuleMap} = require('./dist/server/main');
+const {
+  AppServerModuleNgFactory,
+  LAZY_MODULE_MAP,
+  ngExpressEngine,
+  provideModuleMap
+} = require('./dist/server/main');
 
 // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
-app.engine('html', ngExpressEngine({
-  bootstrap: AppServerModuleNgFactory,
-  providers: [
-    provideModuleMap(LAZY_MODULE_MAP)
-  ]
-}));
+app.engine(
+  'html',
+  ngExpressEngine({
+    bootstrap: AppServerModuleNgFactory,
+    providers: [provideModuleMap(LAZY_MODULE_MAP)]
+  })
+);
 
 app.set('view engine', 'html');
 app.set('views', DIST_FOLDER);
 
+// the demo cdn server
+app.get('/cdn/:imageName?/:width?', async (req, res) => {
+  if (!req.params.imageName) {
+    res.status(404).end('Not found');
+  } else {
+    const width = +req.params.width;
+    let imageName = req.params.imageName;
+
+    switch (true) {
+      case !width:
+        imageName += '-md.jpg';
+        break;
+      case width < 600:
+        imageName += '-xs.jpg';
+        break;
+      case width >= 600 && width < 960:
+        imageName += '-sm.jpg';
+        break;
+      case width >= 960 && width < 1280:
+        imageName += '-md.jpg';
+        break;
+      case width >= 1280 && width < 1920:
+        imageName += '-lg.jpg';
+        break;
+      case width >= 1920:
+        imageName += '-xl.jpg';
+        break;
+      default:
+        imageName += '-md.jpg';
+        break;
+    }
+
+    const fileStream = fs.createReadStream(
+      path.join(__dirname, 'images', imageName)
+    );
+
+    fileStream.on('error', () => {
+      res.status(404).end('Not found');
+    });
+
+    res.set('Content-Type', 'image/jpeg');
+    fileStream.pipe(res);
+  }
+});
+
 // Example Express Rest API endpoints
 // app.get('/api/**', (req, res) => { });
 // Serve static files from /browser
-app.get('*.*', express.static(DIST_FOLDER, {
-  maxAge: '1y'
-}));
+app.get(
+  '*.*',
+  express.static(DIST_FOLDER, {
+    maxAge: '1y'
+  })
+);
 
 // All regular routes use the Universal engine
 app.get('*', (req, res) => {

@@ -7,7 +7,7 @@
       "projectType": "library",
       "root": "projects/ngx-responsive-image",
       "sourceRoot": "projects/ngx-responsive-image/src",
-      "prefix": "lib",
+      "prefix": "nri",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -31,9 +31,7 @@
               "projects/ngx-responsive-image/tsconfig.lib.json",
               "projects/ngx-responsive-image/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -62,9 +60,7 @@
               "projects/demo/src/favicon.ico",
               "projects/demo/src/assets"
             ],
-            "styles": [
-              "projects/demo/src/styles.scss"
-            ],
+            "styles": ["projects/demo/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -122,9 +118,7 @@
               "projects/demo/src/favicon.ico",
               "projects/demo/src/assets"
             ],
-            "styles": [
-              "projects/demo/src/styles.scss"
-            ],
+            "styles": ["projects/demo/src/styles.scss"],
             "scripts": []
           }
         },
@@ -136,9 +130,7 @@
               "projects/demo/tsconfig.spec.json",
               "projects/demo/e2e/tsconfig.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "e2e": {
@@ -177,6 +169,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "ngx-responsive-image"
 }
