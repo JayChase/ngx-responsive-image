@@ -1,6 +1,22 @@
 {
   "name": "ngx-responsive-image",
-  "version": "0.0.1",
+  "version": "0.0.2-alpha",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaychase/ngx-responsive-image.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jaychase/ngx-responsive-image/issues"
+  },
+  "keywords": [
+    "Angular",
+    "responsive",
+    "image",
+    "@angular/cdk"
+  ],
+  "author": "JayChase",
+  "license": "MIT",
+  "private": false,
   "peerDependencies": {
     "@angular/common": "^8.1.2",
     "@angular/core": "^8.1.2",

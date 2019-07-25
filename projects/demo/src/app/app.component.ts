@@ -33,14 +33,7 @@ export class AppComponent {
       )
     );
 
-  breakpointUp$ = this.mediaService.breakpointUp$.pipe(
-    map(
-      ([previous, current]) =>
-        Object.keys(current.breakpoints)[
-          Object.values(current.breakpoints).indexOf(true)
-        ]
-    )
-  );
+  breakpointUp$ = this.mediaService.breakpointUp$;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: any,

@@ -1,18 +1,20 @@
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Inject, Injectable } from '@angular/core';
+import { merge } from 'rxjs';
 import {
   distinctUntilChanged,
   filter,
+  first,
+  map,
   pairwise,
   shareReplay,
   startWith,
   takeWhile
 } from 'rxjs/operators';
 import { BREAKPOINTS } from '../breakpoints.token';
+import { IMAGE_WIDTHS } from '../image-widths.token';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class MediaService {
   breakpoints$ = this.breakpointObserver.observe(this.breakpoints);
 
@@ -63,7 +65,12 @@ export class MediaService {
         return false;
       }
     }),
-    takeWhile(([previous, current]) => {
+    map(([previous, current]) => {
+      return Object.keys(current.breakpoints)[
+        Object.values(current.breakpoints).indexOf(true)
+      ];
+    }),
+    takeWhile(currentBreakpoint => {
       return (
         this.maximumBreakpoint !== this.breakpoints[this.breakpoints.length - 1]
       );
@@ -71,10 +78,27 @@ export class MediaService {
     shareReplay()
   );
 
+  imageWidth$ = merge(
+    this.breakpoints$.pipe(
+      first(),
+      map(
+        breakpointState =>
+          Object.keys(breakpointState.breakpoints)[
+            Object.values(breakpointState.breakpoints).indexOf(true)
+          ]
+      )
+    ),
+    this.breakpointUp$
+  ).pipe(
+    map(breakpoint => this.imageWidths[this.breakpoints.indexOf(breakpoint)]),
+    shareReplay()
+  );
+
   private maximumBreakpoint: string;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
-    @Inject(BREAKPOINTS) private breakpoints: string[]
+    @Inject(BREAKPOINTS) private breakpoints,
+    @Inject(IMAGE_WIDTHS) private imageWidths
   ) {}
 }

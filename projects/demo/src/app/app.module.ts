@@ -18,13 +18,16 @@ import { AppComponent } from './app.component';
     MatCardModule,
     MatListModule,
     ObserversModule,
-    NgxResponsiveImageModule.forRoot([
-      Breakpoints.XSmall,
-      Breakpoints.Small,
-      Breakpoints.Medium,
-      Breakpoints.Large,
-      Breakpoints.XLarge
-    ])
+    NgxResponsiveImageModule.forRoot(
+      [
+        Breakpoints.XSmall,
+        Breakpoints.Small,
+        Breakpoints.Medium,
+        Breakpoints.Large,
+        Breakpoints.XLarge
+      ],
+      [300, 600, 960, 1280, 1920]
+    )
   ],
   providers: [],
   bootstrap: [AppComponent]

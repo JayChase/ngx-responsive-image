@@ -1,6 +1,6 @@
 {
   "name": "ngx-responsive-image",
-  "version": "0.0.0",
+  "version": "0.0.2-alpha",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -16,7 +16,22 @@
     "build:ssr": "npm run build:client-and-server-bundles && npm run compile:server",
     "build:client-and-server-bundles": "rimraf dist && npm run build && ng run demo:server:production --bundleDependencies all"
   },
-  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaychase/ngx-responsive-image.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jaychase/ngx-responsive-image/issues"
+  },
+  "keywords": [
+    "Angular",
+    "responsive",
+    "image",
+    "@angular/cdk"
+  ],
+  "author": "JayChase",
+  "license": "MIT",
+  "private": false,
   "dependencies": {
     "@angular/animations": "~8.1.2",
     "@angular/cdk": "~8.1.1",

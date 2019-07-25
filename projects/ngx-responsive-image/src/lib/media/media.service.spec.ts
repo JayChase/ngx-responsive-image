@@ -7,6 +7,7 @@ import { MediaService } from './media.service';
 
 describe('MediaService', () => {
   const testBreakpoints = ['test', 'test1', 'test2'];
+  const testWidths = [200, 400, 600];
   it('should be created', () => {
     TestBed.configureTestingModule({
       imports: [ObserversModule],
@@ -14,7 +15,7 @@ describe('MediaService', () => {
         {
           provide: MediaService,
           useFactory: (breakpointObserver: BreakpointObserver) =>
-            new MediaService(breakpointObserver, testBreakpoints),
+            new MediaService(breakpointObserver, testBreakpoints, testWidths),
           deps: [BreakpointObserver]
         }
       ]
@@ -39,7 +40,7 @@ describe('MediaService', () => {
           {
             provide: MediaService,
             useFactory: (breakpointObserver: BreakpointObserver) =>
-              new MediaService(breakpointObserver, testBreakpoints),
+              new MediaService(breakpointObserver, testBreakpoints, testWidths),
             deps: [BreakpointObserver]
           }
         ]
@@ -168,7 +169,7 @@ describe('MediaService', () => {
           {
             provide: MediaService,
             useFactory: (breakpointObserver: BreakpointObserver) =>
-              new MediaService(breakpointObserver, testBreakpoints),
+              new MediaService(breakpointObserver, testBreakpoints, testWidths),
             deps: [BreakpointObserver]
           }
         ]
@@ -207,8 +208,8 @@ describe('MediaService', () => {
           skip(1),
           take(1)
         )
-        .subscribe(([previous, current]) => {
-          expect(current).toBe(test2);
+        .subscribe(breakpoint => {
+          expect(breakpoint).toBe('test2');
           done();
         });
 
@@ -249,8 +250,8 @@ describe('MediaService', () => {
           skip(1),
           take(1)
         )
-        .subscribe(([previous, current]) => {
-          expect(current).toBe(test2);
+        .subscribe(breakpoint => {
+          expect(breakpoint).toBe('test2');
           done();
         });
 

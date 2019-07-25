@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BREAKPOINTS } from '../breakpoints.token';
+import { IMAGE_WIDTHS } from '../image-widths.token';
 import { MediaService } from '../media/media.service';
 import { ResponsiveImageDirective } from './responsive-image.directive';
 
@@ -42,6 +43,10 @@ describe('ResponsiveImageDirective', () => {
             Breakpoints.XLarge
           ]
         },
+        {
+          provide: IMAGE_WIDTHS,
+          useValue: [300, 600, 960, 1280, 1920]
+        },
         MediaService
       ],
       imports: [CommonModule, ObserversModule]
@@ -51,7 +56,7 @@ describe('ResponsiveImageDirective', () => {
   it('should replace set the img.src attribute the imgSrc with the target element width', async(() => {
     const imgSrc = 'http://localhost:4000/cdn/banner/:width';
     // tslint:disable-next-line: max-line-length
-    const template = `<div #imgContainer [ngStyle]="{'width.px': width}"><img imgSrc="${imgSrc}" [responsiveImage]="imgContainer" ></div>`;
+    const template = `<div [ngStyle]="{'width.px': width}"><img imgSrc="${imgSrc}" responsiveImage ></div>`;
 
     fixture = createTestComponent(template);
     fixture.componentInstance.width = 400;
@@ -60,7 +65,7 @@ describe('ResponsiveImageDirective', () => {
     const imgElement = fixture.debugElement.query(By.css('img'));
 
     expect(imgElement.nativeElement.getAttribute('src')).toBe(
-      imgSrc.replace(':width', '400')
+      imgSrc.replace(':width', '600')
     );
   }));
 });

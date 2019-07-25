@@ -16,10 +16,10 @@
 </mat-card>
 <mat-card>
   <h2 class="mat-h2">Dynamic Image</h2>
-  <div class="image-container" #imgContainer>
+  <div class="image-container">
     <img
       imgSrc="http://localhost:4000/cdn/banner/:width"
-      [responsiveImage]="imgContainer"
+      responsiveImage
       alt="test image"
       mat-card-image
     />
