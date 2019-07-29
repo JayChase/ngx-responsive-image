@@ -78,7 +78,7 @@ export class MediaService {
     shareReplay()
   );
 
-  imageWidth$ = merge(
+  breakpointAndWidthUp$ = merge(
     this.breakpoints$.pipe(
       first(),
       map(
@@ -90,7 +90,12 @@ export class MediaService {
     ),
     this.breakpointUp$
   ).pipe(
-    map(breakpoint => this.imageWidths[this.breakpoints.indexOf(breakpoint)]),
+    map(breakpoint => {
+      return {
+        width: this.imageWidths[this.breakpoints.indexOf(breakpoint)],
+        breakpoint
+      };
+    }),
     shareReplay()
   );
 

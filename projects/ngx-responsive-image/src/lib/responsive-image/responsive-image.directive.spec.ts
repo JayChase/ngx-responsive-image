@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
 import { BREAKPOINTS } from '../breakpoints.token';
 import { IMAGE_WIDTHS } from '../image-widths.token';
 import { MediaService } from '../media/media.service';
@@ -24,6 +25,13 @@ function createTestComponent(
 
 describe('ResponsiveImageDirective', () => {
   let fixture: ComponentFixture<TestComponent>;
+  const breakpointAndWidthUpSubject = new Subject<{
+    width: number;
+    breakpoint: string;
+  }>();
+  const mockMediaService = {
+    breakpointAndWidthUp$: breakpointAndWidthUpSubject.asObservable()
+  };
 
   afterEach(() => {
     fixture = null;
@@ -47,25 +55,67 @@ describe('ResponsiveImageDirective', () => {
           provide: IMAGE_WIDTHS,
           useValue: [300, 600, 960, 1280, 1920]
         },
-        MediaService
+        {
+          provide: MediaService,
+          useValue: mockMediaService
+        }
       ],
       imports: [CommonModule, ObserversModule]
     });
   });
 
-  it('should replace set the img.src attribute the imgSrc with the target element width', async(() => {
-    const imgSrc = 'http://localhost:4000/cdn/banner/:width';
-    // tslint:disable-next-line: max-line-length
-    const template = `<div [ngStyle]="{'width.px': width}"><img imgSrc="${imgSrc}" responsiveImage ></div>`;
+  describe('if manual', () => {
+    it('should emit breakpointUp event', done => {
+      const imgSrc = 'http://localhost:4000/cdn/banner/:width';
+      // tslint:disable-next-line: max-line-length
+      const template = `<div><img imgSrc="${imgSrc}" [manual]="true" responsiveImage ></div>`;
+      const breakpointUp = {
+        width: 600,
+        breakpoint: 'test-breakpoint'
+      };
+      fixture = createTestComponent(template);
+      fixture.detectChanges();
 
-    fixture = createTestComponent(template);
-    fixture.componentInstance.width = 400;
-    fixture.detectChanges();
+      const imgElement = fixture.debugElement.query(By.css('img'));
+      const responsiveImageDirective = imgElement.injector.get<
+        ResponsiveImageDirective
+      >(ResponsiveImageDirective);
 
-    const imgElement = fixture.debugElement.query(By.css('img'));
+      responsiveImageDirective.breakpointUp.subscribe(result => {
+        expect(result).toEqual({
+          imgSrc,
+          breakpoint: breakpointUp.breakpoint,
+          width: breakpointUp.width
+        });
+        done();
+      });
 
-    expect(imgElement.nativeElement.getAttribute('src')).toBe(
-      imgSrc.replace(':width', '600')
-    );
-  }));
+      breakpointAndWidthUpSubject.next(breakpointUp);
+      fixture.detectChanges();
+    });
+  });
+
+  describe('if !manual', () => {
+    it('should replace set the img.src attribute the imgSrc with the target element width', async(() => {
+      const imgSrc = 'http://localhost:4000/cdn/banner/:width';
+      // tslint:disable-next-line: max-line-length
+      const template = `<div><img imgSrc="${imgSrc}" responsiveImage></div>`;
+      const breakpointUp = {
+        width: 600,
+        breakpoint: 'test-breakpoint'
+      };
+      fixture = createTestComponent(template);
+      fixture.detectChanges();
+
+      breakpointAndWidthUpSubject.next(breakpointUp);
+
+      const imgElement = fixture.debugElement.query(By.css('img'));
+
+      fixture.detectChanges();
+
+      expect(imgElement.nativeElement.getAttribute('src')).toBe(
+        imgSrc.replace(':width', '600')
+      );
+    }));
+  });
 });

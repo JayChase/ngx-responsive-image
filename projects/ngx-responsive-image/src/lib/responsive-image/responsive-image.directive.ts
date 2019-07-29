@@ -1,9 +1,11 @@
 import {
   Directive,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
+  Output,
   Renderer2,
   SimpleChanges
 } from '@angular/core';
@@ -16,6 +18,12 @@ import { MediaService } from '../media/media.service';
 })
 export class ResponsiveImageDirective implements OnDestroy, OnChanges {
   @Input() imgSrc: string;
+  @Input() manual: boolean;
+  @Output() breakpointUp = new EventEmitter<{
+    imgSrc: string;
+    breakpoint: string;
+    width: number;
+  }>();
 
   private subscriptions: { [key: string]: Subscription } = {};
 
@@ -31,13 +39,21 @@ export class ResponsiveImageDirective implements OnDestroy, OnChanges {
     }
 
     if (this.imgSrc) {
-      this.subscriptions.mediaSubscription = this.mediaService.imageWidth$.subscribe(
-        width => {
-          this.renderer2.setAttribute(
-            this.element.nativeElement,
-            'src',
-            this.imgSrc.replace(':width', width)
-          );
+      this.subscriptions.mediaSubscription = this.mediaService.breakpointAndWidthUp$.subscribe(
+        result => {
+          if (this.manual) {
+            this.breakpointUp.emit({
+              imgSrc: this.imgSrc,
+              breakpoint: result.breakpoint,
+              width: result.width
+            });
+          } else {
+            this.renderer2.setAttribute(
+              this.element.nativeElement,
+              'src',
+              this.imgSrc.replace(':width', result.width)
+            );
+          }
         }
       );
     }
