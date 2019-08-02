@@ -8,7 +8,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build": "ng build ngx-responsive-image && ng build demo --prod",
-    "copy-files": "copy README.md dist/ngx-responsive-image && copy LICENSE.md dist/ngx-responsive-image",
+    "copy-files": "copy README.md dist\\ngx-responsive-image && copy LICENSE.md dist\\ngx-responsive-image",
     "pack": "cd dist/ngx-responsive-image && npm pack",
     "prep-lib": "npm run build && npm run copy-files && npm run pack",
     "compile:server": "webpack --config webpack.server.config.js --progress --colors",
