@@ -1,11 +1,14 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   Directive,
   ElementRef,
   EventEmitter,
+  Inject,
   Input,
   OnChanges,
   OnDestroy,
   Output,
+  PLATFORM_ID,
   Renderer2,
   SimpleChanges
 } from '@angular/core';
@@ -28,34 +31,37 @@ export class ResponsiveImageDirective implements OnDestroy, OnChanges {
   private subscriptions: { [key: string]: Subscription } = {};
 
   constructor(
+    @Inject(PLATFORM_ID) private platformId: any,
     private element: ElementRef<HTMLImageElement>,
     private mediaService: MediaService,
     private renderer2: Renderer2
   ) {}
 
   ngOnChanges(simpleChange: SimpleChanges) {
-    if (this.subscriptions.mediaSubscription) {
-      this.subscriptions.mediaSubscription.unsubscribe();
-    }
+    if (isPlatformBrowser(this.platformId)) {
+      if (this.subscriptions.mediaSubscription) {
+        this.subscriptions.mediaSubscription.unsubscribe();
+      }
 
-    if (this.imgSrc) {
-      this.subscriptions.mediaSubscription = this.mediaService.breakpointAndWidthUp$.subscribe(
-        result => {
-          if (this.manual) {
-            this.breakpointUp.emit({
-              imgSrc: this.imgSrc,
-              breakpoint: result.breakpoint,
-              width: result.width
-            });
-          } else {
-            this.renderer2.setAttribute(
-              this.element.nativeElement,
-              'src',
-              this.imgSrc.replace(':width', result.width)
-            );
+      if (this.imgSrc) {
+        this.subscriptions.mediaSubscription = this.mediaService.breakpointAndWidthUp$.subscribe(
+          result => {
+            if (this.manual) {
+              this.breakpointUp.emit({
+                imgSrc: this.imgSrc,
+                breakpoint: result.breakpoint,
+                width: result.width
+              });
+            } else {
+              this.renderer2.setAttribute(
+                this.element.nativeElement,
+                'src',
+                this.imgSrc.replace(':width', result.width)
+              );
+            }
           }
-        }
-      );
+        );
+      }
     }
   }
 

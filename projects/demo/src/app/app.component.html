@@ -1,8 +1,6 @@
 <mat-card>
   <h1 class="mat-title">Dynamic image sizes with Angular</h1>
-  <p class="mat-body1">
-    rendered on: {{ (isBrowser$ | async) ? 'browser' : 'server' }}
-  </p>
+  <p class="mat-body1">rendered on: {{ isBrowser ? 'browser' : 'server' }}</p>
 </mat-card>
 <mat-card>
   <h2 class="mat-h2">Breakpoints</h2>
@@ -19,6 +17,7 @@
   <div class="image-container">
     <img
       imgSrc="http://localhost:4000/cdn/banner/:width"
+      src="assets/images/placeholder.jpg"
       responsiveImage
       alt="test image"
       mat-card-image

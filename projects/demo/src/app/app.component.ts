@@ -2,8 +2,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { isPlatformBrowser } from '@angular/common';
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { MediaService } from 'ngx-responsive-image';
-import { of } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +11,7 @@ import { map, shareReplay } from 'rxjs/operators';
 })
 export class AppComponent {
   title = 'dynamic-images';
-  isBrowser$ = of(isPlatformBrowser(this.platformId)).pipe(shareReplay());
+  isBrowser = isPlatformBrowser(this.platformId);
 
   breakpoints = [
     Breakpoints.XSmall,

@@ -62,7 +62,7 @@ app.get('/cdn/:imageName?/:width?', async (req, res) => {
     }
 
     const fileStream = fs.createReadStream(
-      path.join(__dirname, 'images', imageName)
+      path.join(process.cwd(), 'images', imageName)
     );
 
     fileStream.on('error', () => {

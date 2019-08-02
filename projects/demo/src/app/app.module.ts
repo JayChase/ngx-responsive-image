@@ -1,33 +1,25 @@
-import { Breakpoints } from '@angular/cdk/layout';
 import { ObserversModule } from '@angular/cdk/observers';
 import { NgModule } from '@angular/core';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgxResponsiveImageModule } from 'ngx-responsive-image';
+import {
+  DEFAULT_BREAKPOINTS,
+  DEFAULT_WIDTHS,
+  NgxResponsiveImageModule
+} from 'ngx-responsive-image';
 import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
-    FlexLayoutModule,
     MatButtonModule,
     MatCardModule,
     MatListModule,
     ObserversModule,
-    NgxResponsiveImageModule.forRoot(
-      [
-        Breakpoints.XSmall,
-        Breakpoints.Small,
-        Breakpoints.Medium,
-        Breakpoints.Large,
-        Breakpoints.XLarge
-      ],
-      [300, 600, 960, 1280, 1920]
-    )
+    NgxResponsiveImageModule.forRoot(DEFAULT_BREAKPOINTS, DEFAULT_WIDTHS)
   ],
   providers: [],
   bootstrap: [AppComponent]
