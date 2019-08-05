@@ -83,4 +83,27 @@ You can set custom breakpoints when call **NgxResponsiveImageModule.forRoot()** 
 
 ### If your url requirements are more complicated than just replacing the width
 
-Set the **manual** attribute to true on the image(s) and use the \*\*brekpointUp
+Set the **manual** attribute to true on the image(s) and use the **breakpointUp** event.
+
+```html
+<img
+  imgSrc="http://localhost:4000/cdn/banner/:width"
+  src="assets/images/placeholder.jpg"
+  responsiveImage
+  [manual]="true"
+  alt="test manual image"
+  (breakpointUp)="updateImage($event, img)"
+  mat-card-image
+  #img
+/>
+```
+
+```typescript
+updateImage(event: BreakpointChangeEvent, img: HTMLImageElement) {
+  this.renderer2.setAttribute(
+    img,
+    'src',
+    event.imgSrc.replace(':width', event.width.toString())
+  );
+}
+```
