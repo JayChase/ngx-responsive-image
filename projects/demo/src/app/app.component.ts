@@ -1,7 +1,7 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { isPlatformBrowser } from '@angular/common';
 import { Component, Inject, PLATFORM_ID, Renderer2 } from '@angular/core';
-import { MediaService } from 'ngx-responsive-image';
+import { BreakpointChangeEvent, MediaService } from 'ngx-responsive-image';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -41,13 +41,11 @@ export class AppComponent {
     private renderer2: Renderer2
   ) {}
 
-  updateImage(event: any, img: HTMLImageElement) {
-    console.dir(event);
+  updateImage(event: BreakpointChangeEvent, img: HTMLImageElement) {
     this.renderer2.setAttribute(
       img,
       'src',
-      event.imgSrc.replace(':width', event.width)
+      event.imgSrc.replace(':width', event.width.toString())
     );
-    console.dir(img);
   }
 }

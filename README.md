@@ -82,3 +82,5 @@ You can set custom breakpoints when call **NgxResponsiveImageModule.forRoot()** 
 ```
 
 ### If your url requirements are more complicated than just replacing the width
+
+Set the **manual** attribute to true on the image(s) and use the \*\*brekpointUp
