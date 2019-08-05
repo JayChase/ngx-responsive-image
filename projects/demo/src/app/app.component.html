@@ -24,3 +24,18 @@
     />
   </div>
 </mat-card>
+<mat-card>
+  <h2 class="mat-h2">Dynamic Image using</h2>
+  <div class="image-container">
+    <img
+      imgSrc="http://localhost:4000/cdn/banner/:width"
+      src="assets/images/placeholder.jpg"
+      responsiveImage
+      [manual]="true"
+      alt="test image"
+      (breakpointUp)="updateImage($event, img)"
+      mat-card-image
+      #img
+    />
+  </div>
+</mat-card>

@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MediaService } from '../media/media.service';
+import { BreakpointChangeEvent } from './breakpoint-change-event';
 
 @Directive({
   // tslint:disable-next-line: directive-selector
@@ -22,11 +23,7 @@ import { MediaService } from '../media/media.service';
 export class ResponsiveImageDirective implements OnDestroy, OnChanges {
   @Input() imgSrc: string;
   @Input() manual: boolean;
-  @Output() breakpointUp = new EventEmitter<{
-    imgSrc: string;
-    breakpoint: string;
-    width: number;
-  }>();
+  @Output() breakpointUp = new EventEmitter<BreakpointChangeEvent>();
 
   private subscriptions: { [key: string]: Subscription } = {};
 
